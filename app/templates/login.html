@@ -1,0 +1,30 @@
+{% extends "base.html" %} <!-- header -->
+
+{% block content %}
+    <div class="content">
+        <div class="content-wrapper">
+            <div class="content-flask">
+            <h1>Sign In</h1>
+            <p>Login to access additional options.</p>
+            <br>
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.username(size=32, class_="input", placeholder="Username") }}
+                </p>
+                <p>
+                    {{ form.password(size=32, class_="input", placeholder="Password") }}
+                </p>
+                <br>
+                <p>{{ form.submit(class_="button") }}</p>
+            </form>
+                <br>
+                  {% for msg in get_flashed_messages() %}
+                  <h2 style="color: #fff">{{ msg }}</h2>
+                  {% endfor %}
+                <br>
+                <p>If you don't have an account, you can <a href="../register/">register an account</a>.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

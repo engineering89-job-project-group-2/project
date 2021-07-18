@@ -1,0 +1,52 @@
+{% extends "base.html" %} <!-- header -->
+
+{% block content %}
+
+    <div class="content">
+        <div class="content-wrapper">
+
+            <div class="content-left">
+                <h1>Vacancies</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <br>
+                <form action="" method="post" novalidate>
+                    {{ form.hidden_tag() }}
+                    <p>Filter:</p>
+                    {{ form.job_filter(class_="input input-dropdown") }}
+                    {{ form.submit(class_="button") }}
+                </form>
+                <br>
+                {% for msg in get_flashed_messages() %}
+                  <h2>{{ msg }}</h2>
+                {% endfor %}
+            </div>
+            <div class="content-flask content-right">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>job_name</th>
+                        <th>company</th>
+                        <th>location</th>
+                        <th>salary</th>
+                        <th>job_type</th>
+                        <th>deadline</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                     {% for row in data %}
+                        <tr>
+                            <td>{{row[0][0]}}</td>
+                            <td>{{row[0][1]}}</td>
+                            <td>{{row[0][2]}}</td>
+                            <td>{{"£{:,}".format(row[0][3])}}</td>
+                            <td>{{row[0][4]}}</td>
+                            <td>{{row[0][5]}}</td>
+                        </tr>
+                     {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

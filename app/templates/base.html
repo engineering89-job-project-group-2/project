@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>    
+        <!--title-->
+        {% if title %}
+        <title>{{ title }} - JobCenter++</title>
+        {% else %}
+        <title>Welcome to JobCenter++!</title>
+        {% endif %}
+        <!--meta tags-->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        
+        <meta name="theme-color" content="#"/>
+        <meta name="description" content="#">
+        <meta name="keywords" content="#, #, #">
+        <meta name="author" content="Ahhhh-man, monotiller">
+
+        <link rel="shortcut icon" href="#"/>
+        
+        <!--CSS Link(s)-->
+        <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/style.css') }}" />
+
+        <!--JQuery/JS Link(s)-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+        
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <!--fonts.gooogle.com-->
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet"> <!-- font-family: 'Ubuntu', sans-serif;-->
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,500,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@1,900&display=swap" rel="stylesheet">
+        
+    </head>
+    
+    <body>
+        <nav id="m-nav">
+            <div class="m-nav-sub m-nav-t">
+                <div class="m-nav-t_wrap">
+                    <div class="m-nav-title">JobCenter++</div>
+                </div>
+            </div>
+
+            
+            <div class="m-nav-sub m-nav-b" id="m-nav-b">
+                <div class="m-nav-b_wrap">
+                    
+                    <ul class="target">
+                        
+                        <div id="m-nav-sub-title" class="target">
+                            <div class="div">
+                                <a href="/" id="sTitleA">{Job: center;}</a>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="menu" id="menu"><i class="material-icons miii">menu</i>Menu</div>
+                        
+                        <div class="qwerty">
+                            <li class="target"><a href="/"><span class="material-icons m_icon">home</span>Home</a></li>
+                            <li class="target"><a href="/roles"><span class="material-icons m_icon">group</span>Roles</a></li>
+                            {% if session['username'] %}
+                            <li class="target"><a href="/vacancies"><span class="material-icons m_icon">work</span>Vacancies</a></li>
+                            <!--<li class="target"><a href="/createflight"><span class="material-icons m_icon">travel_explore</span>Flight Management</a></li>-->
+                            {% endif %}
+                        </div>
+                        <div class="qwerty right">
+                            {% if not session['username'] %}
+                            <li class="target"><a href="/login"><span class="material-icons m_icon">login</span>Login</a></li>
+                            <li class="target"><a href="/register"><span class="material-icons m_icon">person_add</span>Register</a></li>
+                            {% endif %}
+                            {% if session['username'] %}
+                            <li class="target"><a href="/logout"><span class="material-icons m_icon">logout</span>Logout</a></li>
+                            {% endif %}
+                        </div>
+                        
+                        <script>$( "#menu" ).click(function() {$(".qwerty").toggleClass("open");});</script>
+                    </ul>
+                </div>
+            </div>         
+        </nav>
+        
+
+        {% block content %}
+
+        {% endblock %}
+
+        <div class="footer">
+            <div class="footer-wrapper">
+                JobCenter++ 2021 &nbsp; | &nbsp; Job Search Project &nbsp; | &nbsp; Made with <span class="material-icons" style="transform: translate(0, 7px);">favorite_border</span> by Group 2
+            </div>
+        </div>
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+			window.onscroll = changePos;
+
+            function changePos() {
+                var header = document.getElementById("m-nav-b");
+                var sTitle = document.getElementById("m-nav-sub-title");
+                var sTitleA = document.getElementById("sTitleA");
+                var menu = document.getElementById("menu");
+
+                if (window.pageYOffset > 80) {
+                    header.style.position = "fixed";
+                    header.style.top = "0";
+                    header.style.fontSize = "13px";
+                    header.style.background = "#000";
+                    menu.style.fontSize = "15px";
+                    
+                    sTitle.style.width = "220px";
+                    sTitle.style.paddingRight = "8px";
+                    sTitleA.style.color = "#fff";
+                    sTitle.style.marginLeft = "10px";
+                    
+                } else {
+                    header.style.position = "";
+                    header.style.top = "";
+                    header.style.fontSize = "";
+                    header.style.background = "";
+                    
+                    sTitle.style.width = "";
+                    sTitle.style.paddingRight = "0px";
+                    sTitle.style.marginLeft = "0px";
+                    sTitleA.style.color = "";
+                }
+            }
+</script>
+
+    </body>
+</html>
