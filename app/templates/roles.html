@@ -1,0 +1,61 @@
+{% extends "base.html" %} <!-- header -->
+
+{% block content %}
+    <div class="content">
+        <div class="content-wrapper">
+        <div class="content-left">
+            <h1>IT Roles</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <br>
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+            <p>Filter:</p>
+                {{ form.role_filter(class_="input input-dropdown") }}
+                {{ form.submit(class_="button") }}
+            </form>
+            <br>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <br>
+            <form action="" method="post" novalidate>
+                {{ download.submit(class_="button") }}
+            </form>
+
+            {% for msg in get_flashed_messages() %}
+              <h2>{{ msg }}</h2>
+            {% endfor %}
+        </div>
+
+        <div class="content-flask content-right">
+            <div id="content-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Rank (Last 6 Months)</th>
+                    <th>Rank Change (YoY)</th>
+                    <th>Median Salary</th>
+                    <th>Median Salary Change (YoY)</th>
+                    <th>Historical Job Ads</th>
+                    <th>Job Vacancies</th>
+                </tr>
+                </thead>
+                <tbody>
+                 {% for row in data %}
+                    <tr>
+                        <td>{{row[0]}}</td>
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td>{{"£{:,}".format(row[3])}}</td>
+                        <td>{{row[4]}}</td>
+                        <td>{{"{:,}".format(row[5])}}</td>
+                        <td>{{"{:,}".format(row[6])}}</td>
+                    </tr>
+                 {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}
+
