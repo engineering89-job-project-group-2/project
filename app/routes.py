@@ -1,4 +1,9 @@
-from flask import render_template, flash, redirect, url_for, session
+import csv
+import datetime
+import io
+import sqlite3
+
+from flask import render_template, flash, redirect, url_for, session, Response
 from app import flask_app
 from app.login_form import LoginForm, RegisterForm
 from app.login_database import LoginDatabase
@@ -96,8 +101,7 @@ def roles():
             category = 'rank'
             sort_order = 'ASC'
     elif download.validate_on_submit():
-        RolesDatabase().export_to_csv()
-        flash('Hello')
+        return Response(RolesDatabase.export_to_csv(), mimetype='text/csv', headers={"Content-disposition": "attachment; filename=path"})
     return render_template('roles.html', title='Roles', form=form,
                            data=RolesDatabase().view_sorted_roles(category, sort_order), download=download)
 
