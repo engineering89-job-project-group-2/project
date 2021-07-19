@@ -1,7 +1,7 @@
 import sqlite3
 import csv
-from flask import send_file
-
+import datetime
+from flask import send_file, Response
 
 class RolesDatabase:
     roles_db = sqlite3.connect('app/databases/roles.db', check_same_thread=False)
@@ -41,12 +41,14 @@ class RolesDatabase:
         return all_roles
 
     def export_to_csv(self):
-        self.roles_db_cursor.execute("select * from roles")
-        path = "roles_download.csv"
-        with open(path, "w") as csv_file:
+        self.roles_db_cursor.execute("SELECT * FROM roles")
+        now = datetime.datetime.now
+        path = "generated/roles_{}.csv".format(now.strftime("%Y%m%d%H%m%s"))
+        with open(path, "w", newline='') as csv_file:
             csv_writer = csv.writer(csv_file, delimiter=",", lineterminator='\n')
             csv_writer.writerow([i[0] for i in self.roles_db_cursor.description])
             csv_writer.writerows(self.roles_db_cursor)
+        return path
         # need to add download part
         # send_file(path, as_attachment=True)
 
