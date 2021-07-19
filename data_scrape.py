@@ -25,11 +25,9 @@ def create_rows(seq, num):  # function to split list into a number of sub lists
     avg = len(seq) / float(num)
     out = []
     last = 0.0
-
     while last < len(seq):
         out.append(seq[int(last):int(last + avg)])
         last += avg
-
     return out
 
 
@@ -42,11 +40,10 @@ data_df = pd.DataFrame(data, columns=['Description', 'Rank (last 6 months', 'Ran
 
 
 def create_connection(db_file):
-    """ create a database connection to a SQLite database """
     conn = None
     try:
         conn = sqlite3.connect(db_file)
-        print(sqlite3.version)
+        # print(sqlite3.version)
     except Error as e:
         print(e)
     finally:
@@ -55,4 +52,5 @@ def create_connection(db_file):
 
 
 if __name__ == '__main__':
+    # creates .db file in app/databases folder - can change name here
     create_connection(r"/Users/Tom1/Documents/Sparta/Week6_project/flask/app/databases/data_scrape.db")
