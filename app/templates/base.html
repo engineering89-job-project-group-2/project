@@ -39,7 +39,10 @@
         <nav id="m-nav">
             <div class="m-nav-sub m-nav-t">
                 <div class="m-nav-t_wrap">
-                    <div class="m-nav-title">JobCenter++</div>
+                    <!--<div class="m-nav-title">JobCenter++</div>-->
+                    <div class="m-nav-title">
+                        <a href="/" title="jobcentre++"><img src="/static/img/logo.svg" height="50px" style="margin-top: 15px"></a>
+                    </div>
                 </div>
             </div>
 
@@ -51,7 +54,7 @@
                         
                         <div id="m-nav-sub-title" class="target">
                             <div class="div">
-                                <a href="/" id="sTitleA">{Job: center;}</a>
+                                <a href="/" id="sTitleA" title="jobcentre++">job<span style="color:#FFED00">centre</span>++</a>
                             </div>
                         </div>
                         
@@ -59,8 +62,8 @@
                         <div class="menu" id="menu"><i class="material-icons miii">menu</i>Menu</div>
                         
                         <div class="qwerty">
-                            <li class="target"><a href="/"><span class="material-icons m_icon">home</span>Home</a></li>
-                            <li class="target"><a href="/roles"><span class="material-icons m_icon">group</span>Roles</a></li>
+                            <li class="target"><a href="/" title="Home"><span class="material-icons m_icon">home</span>Home</a></li>
+                            <li class="target"><a href="/roles" title="Roles"><span class="material-icons m_icon">group</span>Roles</a></li>
                             {% if session['username'] %}
                             <li class="target"><a href="/vacancies"><span class="material-icons m_icon">work</span>Vacancies</a></li>
                             <!--<li class="target"><a href="/createflight"><span class="material-icons m_icon">travel_explore</span>Flight Management</a></li>-->
@@ -116,7 +119,7 @@
                     header.style.background = "#000";
                     menu.style.fontSize = "15px";
                     
-                    sTitle.style.width = "220px";
+                    sTitle.style.width = "150px";
                     sTitle.style.paddingRight = "8px";
                     sTitleA.style.color = "#fff";
                     sTitle.style.marginLeft = "10px";

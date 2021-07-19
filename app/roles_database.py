@@ -1,7 +1,9 @@
 import sqlite3
 import csv
-import datetime
-from flask import send_file, Response
+import requests
+import lxml.html as lh
+from flask import send_file
+
 
 class RolesDatabase:
     roles_db = sqlite3.connect('app/databases/roles.db', check_same_thread=False)
@@ -11,12 +13,16 @@ class RolesDatabase:
         self.roles_db.execute("""CREATE TABLE IF NOT EXISTS roles (
             job_role TEXT,
             rank INTEGER,
-            rank_change REAL,
+            rank_change INTEGER,
             median_salary INTEGER,
             median_salary_change REAL,
-            historical INTEGER,
+            historical TEXT,
             live_job_count INTEGER
         )""")
+
+    def del_all_roles(self):
+        self.roles_db_cursor.execute("DELETE FROM roles")
+        self.roles_db.commit()
 
     def add_role(self, job_role, rank, rank_change, median_salary, median_salary_change, historical,
                  live_job_count):
@@ -28,6 +34,32 @@ class RolesDatabase:
     def remove_role(self, job_role):
         self.roles_db_cursor.execute("DELETE FROM roles WHERE job_role='{}'".format(job_role))
         self.roles_db.commit()
+
+    def role_scrap_to_db(self):
+        try:
+            request = requests.get("https://www.itjobswatch.co.uk/")
+            doc = lh.fromstring(request.content)  # initial scraping from URL
+            tr_elements = doc.xpath('//tr')[
+                          4:54]  # top 50 job scraped w/o headers. Remark: change 4->3 to incl. headers
+
+            # Delete previous entries
+            self.del_all_roles()
+            # lambda functions
+            integer = lambda x: -int(x.replace('-', '')) if '-' in x else int(x.replace('+', ''))
+            rational = lambda x: -float(x.replace('-', '')) if '-' in x else float(x.replace('+', ''))
+            dash_check = lambda x: '0' if x == '-' else x
+            # abridge = lambda x: int(x[0:x.find(' ')].replace(',', ''))
+
+            for items in tr_elements:  # extracts elements from scraped site data
+                self.add_role(items[0].text_content(),
+                              int(items[1].text_content().replace(',', '')),  # Rank
+                              integer(items[2].text_content().replace(',', '')),  # Rank Change
+                              int(items[3].text_content().replace(',', '').replace('£', '')),  # Median Salary
+                              rational(dash_check(items[4].text_content()).replace(',', '').replace('%', '')),  # MSC
+                              items[5].text_content(),  # Historical Job Ads
+                              int(items[6].text_content().replace(',', '')))  # Job Vacancies
+        except Exception as e:
+            print(e)
 
     # # Redundant code as view_sorted_roles > view_role
     # def view_role(self):
@@ -41,14 +73,12 @@ class RolesDatabase:
         return all_roles
 
     def export_to_csv(self):
-        self.roles_db_cursor.execute("SELECT * FROM roles")
-        now = datetime.datetime.now
-        path = "generated/roles_{}.csv".format(now.strftime("%Y%m%d%H%m%s"))
-        with open(path, "w", newline='') as csv_file:
+        self.roles_db_cursor.execute("select * from roles")
+        path = "roles_download.csv"
+        with open(path, "w") as csv_file:
             csv_writer = csv.writer(csv_file, delimiter=",", lineterminator='\n')
             csv_writer.writerow([i[0] for i in self.roles_db_cursor.description])
             csv_writer.writerows(self.roles_db_cursor)
-        return path
         # need to add download part
         # send_file(path, as_attachment=True)
 
@@ -75,4 +105,9 @@ print(RolesDatabase().view_sorted_roles('live_job_count'))
 # Checking csv conversion
 RolesDatabase().export_to_csv()
 
+# Checking scrapper 
+RolesDatabase().role_scrap_to_db()
+
 """
+
+RolesDatabase().role_database_initialise()
