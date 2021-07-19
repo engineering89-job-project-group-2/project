@@ -17,4 +17,5 @@ class RolesForm(FlaskForm):
 
 
 class RolesDownload(FlaskForm):
+    # temp = SelectField(choices=[1,2,3,4], validators=[DataRequired()])
     submit = SubmitField('Download .csv')

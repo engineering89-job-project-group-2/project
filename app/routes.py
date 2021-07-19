@@ -101,9 +101,28 @@ def roles():
             category = 'rank'
             sort_order = 'ASC'
     elif download.validate_on_submit():
-        return Response(RolesDatabase.export_to_csv(), mimetype='text/csv', headers={"Content-disposition": "attachment; filename=path"})
+        return Response('databases/roles.db', mimetype='text/csv', headers={"Content-disposition": "attachment; filename=path"})
     return render_template('roles.html', title='Roles', form=form,
                            data=RolesDatabase().view_sorted_roles(category, sort_order), download=download)
+
+# @flask_app.route('/download')
+# def download_csv():
+#     roles_db = sqlite3.connect('app/databases/roles.db', check_same_thread=False)
+#     roles_db_cursor = roles_db.cursor()
+#     roles_db_cursor.execute("SELECT * FROM roles")
+#     result = roles_db_cursor.fetchall()
+#     output = io.StringIO()
+#     writer = csv.writer(output)
+#
+#     line = ['Role, Rank, Rank Change, Median Salary, Median Salary Change, Historical, Live Job Count']
+#     writer.writerow(line)
+#
+#     for row in result:
+#         line = row['job_role'] + ',' + row['rank'] + ',' + row['rank_change'] + ',' + row['median_salary'] + ',' + row['median_salary_change'] + ',' + row['historical']  + ',' + row['live_job_count']
+#         writer.writerow(line)
+#
+#     output.seek(0)
+#     return Response(output, mimetype='text/csv', headers={"Content-disposition": "attachment; filename=path"})
 
 
 @flask_app.route('/vacancies', methods=['GET', 'POST'])
