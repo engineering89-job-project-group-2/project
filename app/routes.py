@@ -104,7 +104,7 @@ def roles():
             sort_order = 'ASC'
         flash('{}'.format(form.role_filter.data))
     return render_template('roles.html', title='Roles', form=form,
-                           data=RolesDatabase().view_sorted_roles(category, sort_order), download=download)
+                           data=RolesDatabase().view_sorted_roles_logged_out(category, sort_order), download=download)
 
 
 @flask_app.route('/search/', methods=['GET', 'POST'])
@@ -117,7 +117,7 @@ def search():
         roles_db_cursor.execute("SELECT * FROM roles WHERE job_role LIKE (?)", [constructed_query])
         query_roles = roles_db_cursor.fetchall()
         return render_template('search.html', title='Search', form=search_form, data=query_roles)
-    return render_template('search.html', title='Search', form=search_form, data=RolesDatabase().view_sorted_roles('job_role', 'ASC'))
+    return render_template('search.html', title='Search', form=search_form, data=RolesDatabase().view_sorted_roles_logged_out('job_role', 'ASC'))
 
 
 @flask_app.route('/vacancies/', methods=['GET', 'POST'])

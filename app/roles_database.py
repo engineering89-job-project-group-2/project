@@ -2,7 +2,7 @@ import sqlite3
 import csv
 import requests
 import lxml.html as lh
-from flask import send_file
+from flask import send_file, session
 import io
 
 
@@ -68,10 +68,17 @@ class RolesDatabase:
     #     all_roles = self.roles_db_cursor.fetchall()
     #     return all_roles
 
-    def view_sorted_roles(self, category, sort_order):
-        self.roles_db_cursor.execute("SELECT * FROM roles ORDER BY {} {}".format(category, sort_order))
-        all_roles = self.roles_db_cursor.fetchall()
-        return all_roles
+    def view_sorted_roles_logged_in(self, category, sort_order):
+        if 'username' in session:
+            self.roles_db_cursor.execute("SELECT * FROM roles ORDER BY {} {}".format(category, sort_order))
+            all_roles = self.roles_db_cursor.fetchall()
+            return all_roles
+
+    def view_sorted_roles_logged_out(self, category, sort_order):
+        if 'username' not in session:
+            self.roles_db_cursor.execute("SELECT * FROM roles ORDER BY {} {}".format(category, sort_order))
+            all_roles = self.roles_db_cursor.fetchmany(5)
+            return all_roles
 
     def export_to_csv(self, file_path):
         # Need to add error handling +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
