@@ -57,7 +57,7 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         db = LoginDatabase()
-        db.new_user(int(form.staff_id.data), str(form.username.data), str(form.password.data), str(form.role.data))
+        db.new_user(str(form.email.data), str(form.username.data), str(form.password.data))
         flash("User registration complete!")
     return render_template('register.html', title='Register a new user', form=form)
 
