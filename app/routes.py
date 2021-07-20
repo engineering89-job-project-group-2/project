@@ -43,7 +43,7 @@ def login():
     return render_template('login.html', title='Sign In', form=form)
 
 
-@flask_app.route('/register', methods=['GET', 'POST'])
+@flask_app.route('/register/', methods=['GET', 'POST'])
 def register():
     try:
         if 'username' in session:
@@ -59,14 +59,14 @@ def register():
     return render_template('register.html', title='Register a new user', form=form)
 
 
-@flask_app.route('/logout')
+@flask_app.route('/logout/')
 def logout():
     session.pop('admin', None)
     session.pop('username', None)
     return redirect(url_for('index'))
 
 
-@flask_app.route('/roles', methods=['GET', 'POST'])
+@flask_app.route('/roles/', methods=['GET', 'POST'])
 def roles():
     form = RolesForm()
     download = RolesDownload()
@@ -104,7 +104,7 @@ def roles():
                            data=RolesDatabase().view_sorted_roles(category, sort_order), download=download)
 
 
-@flask_app.route('/vacancies', methods=['GET', 'POST'])
+@flask_app.route('/vacancies/', methods=['GET', 'POST'])
 def vacancies():
     # If not logged in, return user to index
     try:

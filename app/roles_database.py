@@ -16,7 +16,7 @@ class RolesDatabase:
             rank_change INTEGER,
             median_salary INTEGER,
             median_salary_change REAL,
-            historical TEXT,
+            historical INTEGER,
             live_job_count INTEGER
         )""")
 
@@ -48,7 +48,7 @@ class RolesDatabase:
             integer = lambda x: -int(x.replace('-', '')) if '-' in x else int(x.replace('+', ''))
             rational = lambda x: -float(x.replace('-', '')) if '-' in x else float(x.replace('+', ''))
             dash_check = lambda x: '0' if x == '-' else x
-            # abridge = lambda x: int(x[0:x.find(' ')].replace(',', ''))
+            abridge = lambda x: int(x[0:x.find(' ')].replace(',', ''))
 
             for items in tr_elements:  # extracts elements from scraped site data
                 self.add_role(items[0].text_content(),
@@ -56,7 +56,7 @@ class RolesDatabase:
                               integer(items[2].text_content().replace(',', '')),  # Rank Change
                               int(items[3].text_content().replace(',', '').replace('£', '')),  # Median Salary
                               rational(dash_check(items[4].text_content()).replace(',', '').replace('%', '')),  # MSC
-                              items[5].text_content(),  # Historical Job Ads
+                              int(abridge(items[5].text_content())),  # Historical Job Ads
                               int(items[6].text_content().replace(',', '')))  # Job Vacancies
         except Exception as e:
             print(e)
