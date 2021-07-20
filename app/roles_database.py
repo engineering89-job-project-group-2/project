@@ -3,6 +3,7 @@ import csv
 import requests
 import lxml.html as lh
 from flask import send_file
+import io
 
 
 class RolesDatabase:
@@ -72,20 +73,31 @@ class RolesDatabase:
         all_roles = self.roles_db_cursor.fetchall()
         return all_roles
 
-    def export_to_csv(self):
-        self.roles_db_cursor.execute("SELECT * FROM roles")
-        path = "roles_download.csv"
-        with open(path, "w") as csv_file:
+    def export_to_csv(self, file_path):
+        # Need to add error handling +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        self.roles_db_cursor.execute("select * from roles")
+        with open(file_path, "w") as csv_file:
             csv_writer = csv.writer(csv_file, delimiter=",", lineterminator='\n')
             csv_writer.writerow([i[0] for i in self.roles_db_cursor.description])
             csv_writer.writerows(self.roles_db_cursor)
-        # need to add download part
-        # send_file(path, as_attachment=True)
 
-    def role_search(self, query):
-        self.roles_db_cursor.execute("SELECT * FROM roles WHERE job_role LIKE {}".format(query))
-        query_roles = self.roles_db_cursor.fetchall()
-        return query_roles
+        # --------------------------------------------------------------------------------------------------
+        # roles_db = sqlite3.connect('app/databases/roles.db', check_same_thread=False)
+        # roles_db_cursor = roles_db.cursor()
+        # roles_db_cursor.execute("SELECT * FROM roles")
+        # result = roles_db_cursor.fetchall()
+        # output = io.StringIO()
+        # writer = csv.writer(output)
+        #
+        # line = ['Role, Rank, Rank Change, Median Salary, Median Salary Change, Historical, Live Job Count']
+        # writer.writerow(line)
+        #
+        # for row in result:
+        #     line = row['job_role'] + ',' + row['rank'] + ',' + row['rank_change'] + ',' + row['median_salary'] + ',' + row['median_salary_change'] + ',' + row['historical']  + ',' + row['live_job_count']
+        #     writer.writerow(line)
+        #
+        # output.seek(0)
+        # --------------------------------------------------------------------------------------------------
 
 
 """
