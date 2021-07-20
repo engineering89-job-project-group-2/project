@@ -13,9 +13,8 @@ class RolesForm(FlaskForm):
                'Job Vacancies'
                ]
     role_filter = SelectField(choices=options, validators=[DataRequired()])
-    submit = SubmitField('Sort')
+    sort = SubmitField('Sort')
 
 
 class RolesDownload(FlaskForm):
-    # temp = SelectField(choices=[1,2,3,4], validators=[DataRequired()])
-    submit = SubmitField('Download .csv')
+    download = SubmitField('Download .csv')

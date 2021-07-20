@@ -10,16 +10,12 @@
             <form action="" method="post" novalidate>
                 {{ form.hidden_tag() }}
                 <p>
-                    {{ form.staff_id(size=32,class_="input", placeholder="Staff ID") }}
-                </p>
-                <p>
+                    {{ form.first_name(size=32,class_="input", placeholder="First Name") }}
+                    {{ form.last_name(size=32,class_="input", placeholder="Last Name") }}
+                    {{ form.email(size=32,class_="input", placeholder="Email") }}
                     {{ form.username(size=32,class_="input", placeholder="Username") }}
-                </p>
-                <p>
                     {{ form.password(size=32,class_="input", placeholder="Password") }}
-                </p>
-                <p>
-                    {{ form.role(size=32,class_="input", placeholder="Role") }}
+                    {{ form.confirm_password(size=32,class_="input", placeholder="Confirm Password") }}
                 </p>
                 <br>
                 <p>{{ form.submit(class_="button") }}</p>

@@ -1,9 +1,4 @@
-import csv
-import datetime
-import io
-import sqlite3
-
-from flask import render_template, flash, redirect, url_for, session, Response
+from flask import render_template, flash, redirect, url_for, session
 from app import flask_app
 from app.login_form import LoginForm, RegisterForm
 from app.login_database import LoginDatabase
@@ -11,6 +6,7 @@ from app.vacancies_database import VacanciesDatabase
 from app.vacancies_form import VacancyForm
 from app.roles_database import RolesDatabase
 from app.roles_form import RolesForm, RolesDownload
+from flask import send_file
 
 
 @flask_app.route('/index')
@@ -47,7 +43,7 @@ def login():
     return render_template('login.html', title='Sign In', form=form)
 
 
-@flask_app.route('/register', methods=['GET', 'POST'])
+@flask_app.route('/register/', methods=['GET', 'POST'])
 def register():
     try:
         if 'username' in session:
@@ -63,20 +59,23 @@ def register():
     return render_template('register.html', title='Register a new user', form=form)
 
 
-@flask_app.route('/logout')
+@flask_app.route('/logout/')
 def logout():
     session.pop('admin', None)
     session.pop('username', None)
     return redirect(url_for('index'))
 
 
-@flask_app.route('/roles', methods=['GET', 'POST'])
+@flask_app.route('/roles/', methods=['GET', 'POST'])
 def roles():
     form = RolesForm()
     download = RolesDownload()
     category = 'rank'
     sort_order = 'ASC'
+    # if download.validate_on_submit():
+    #     flash('Hello')
     if form.validate_on_submit():
+        RolesDatabase().role_scrap_to_db()
         # python switch lol
         # need to figure out how to order; is bigger always better? ASC = ascending, DESC = descending
         if form.role_filter.data == 'Alphabetical':
@@ -100,32 +99,12 @@ def roles():
         else:
             category = 'rank'
             sort_order = 'ASC'
-    elif download.validate_on_submit():
-        return Response('databases/roles.db', mimetype='text/csv', headers={"Content-disposition": "attachment; filename=path"})
+        flash('{}'.format(form.role_filter.data))
     return render_template('roles.html', title='Roles', form=form,
                            data=RolesDatabase().view_sorted_roles(category, sort_order), download=download)
 
-# @flask_app.route('/download')
-# def download_csv():
-#     roles_db = sqlite3.connect('app/databases/roles.db', check_same_thread=False)
-#     roles_db_cursor = roles_db.cursor()
-#     roles_db_cursor.execute("SELECT * FROM roles")
-#     result = roles_db_cursor.fetchall()
-#     output = io.StringIO()
-#     writer = csv.writer(output)
-#
-#     line = ['Role, Rank, Rank Change, Median Salary, Median Salary Change, Historical, Live Job Count']
-#     writer.writerow(line)
-#
-#     for row in result:
-#         line = row['job_role'] + ',' + row['rank'] + ',' + row['rank_change'] + ',' + row['median_salary'] + ',' + row['median_salary_change'] + ',' + row['historical']  + ',' + row['live_job_count']
-#         writer.writerow(line)
-#
-#     output.seek(0)
-#     return Response(output, mimetype='text/csv', headers={"Content-disposition": "attachment; filename=path"})
 
-
-@flask_app.route('/vacancies', methods=['GET', 'POST'])
+@flask_app.route('/vacancies/', methods=['GET', 'POST'])
 def vacancies():
     # If not logged in, return user to index
     try:
@@ -142,3 +121,8 @@ def vacancies():
             data = VacanciesDatabase().view_sorted_vacancies(form.job_filter.data)
 
     return render_template('vacancies.html', title='Vacancies', form=form, data=data)
+
+
+@flask_app.route('/download')
+def download_csv():
+    return send_file('outputs/download.csv', mimetype='text/csv', as_attachment=True)
