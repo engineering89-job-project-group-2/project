@@ -39,8 +39,8 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for('login'))
         session['username'] = form.username.data
-        if user[3] == 'admin':
-            session['admin'] = True
+        # if user[3] == 'admin':
+        #     session['admin'] = True
         flash('Logged in successfully')
         return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
