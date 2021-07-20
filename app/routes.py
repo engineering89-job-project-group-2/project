@@ -139,7 +139,7 @@ def vacancies():
     return render_template('vacancies.html', title='Vacancies', form=form, data=data)
 
 
-@flask_app.route('/download', methods=['GET'])
+@flask_app.route('/download/', methods=['GET'])
 def download_csv():
     file_name = 'roles_download.csv'
     RolesDatabase().export_to_csv(f'app/outputs/{file_name}')
