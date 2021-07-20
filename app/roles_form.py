@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, SubmitField
+from wtforms import SelectField, SubmitField, StringField
 from wtforms.validators import DataRequired
 
 
@@ -14,6 +14,11 @@ class RolesForm(FlaskForm):
                ]
     role_filter = SelectField(choices=options, validators=[DataRequired()])
     sort = SubmitField('Sort')
+
+
+class RoleSearch(FlaskForm):
+    search_term = StringField(validators=[DataRequired()])
+    search_button = SubmitField("\U0001F50D")
 
 
 class RolesDownload(FlaskForm):

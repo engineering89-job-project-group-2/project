@@ -4,15 +4,13 @@
     <div class="content">
         <div class="content-wrapper">
         <div class="content-left">
-            <h1>IT Roles</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <h1>Search</h1>
+            <p>Why not search our database?</p>
             <br>
             <form action="" method="post" novalidate>
                 {{ form.hidden_tag() }}
-            <p>Filter:</p>
-                <input type="hidden" name="form-name" value="form1">
-                {{ form.role_filter(class_="input input-dropdown") }}
-                {{ form.sort(class_="button") }}
+                {{ form.search_term(size=32, class_="input", placeholder="Search") }}
+                {{ form.search_button(class_="button") }}
             </form>
             <br>
             {% for msg in get_flashed_messages() %}
@@ -21,7 +19,7 @@
                 </div>
             {% endfor %}
             <br>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p>Go ahead and download the results</p>
             <br>
             <form action="" method="post" novalidate>
                 <a class="button button-margin" href="/download">Download .csv</a>
