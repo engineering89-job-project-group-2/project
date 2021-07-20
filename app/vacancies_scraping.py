@@ -11,7 +11,7 @@ htmlElem = html.document_fromstring(sourceCode)
 vacancies = htmlElem.find_class('job')  # getting all job data entries from site
 vacancy_list = []
 for i in range(len(vacancies)):
-    vac = str(vacancies[0].text_content())  # extracting text content from html files
+    vac = str(vacancies[i].text_content())  # extracting text content from html files
     vac = os.linesep.join([s for s in vac.splitlines() if s.strip()])  # removing blank lines
     vac = vac[36:]  # blank space at the beginning of each entry
     vac = vac.split("\n                                    ")  # separator from scraped table entries
