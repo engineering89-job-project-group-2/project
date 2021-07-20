@@ -73,7 +73,7 @@ class RolesDatabase:
         return all_roles
 
     def export_to_csv(self):
-        self.roles_db_cursor.execute("select * from roles")
+        self.roles_db_cursor.execute("SELECT * FROM roles")
         path = "roles_download.csv"
         with open(path, "w") as csv_file:
             csv_writer = csv.writer(csv_file, delimiter=",", lineterminator='\n')
@@ -81,6 +81,11 @@ class RolesDatabase:
             csv_writer.writerows(self.roles_db_cursor)
         # need to add download part
         # send_file(path, as_attachment=True)
+
+    def role_search(self, query):
+        self.roles_db_cursor.execute("SELECT * FROM roles WHERE job_role LIKE {}".format(query))
+        query_roles = self.roles_db_cursor.fetchall()
+        return query_roles
 
 
 """
