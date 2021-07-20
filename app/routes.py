@@ -1,6 +1,7 @@
+import os
 import sqlite3
 
-from flask import render_template, flash, redirect, url_for, session, request
+from flask import render_template, flash, redirect, url_for, session, current_app, request
 from app import flask_app
 from app.login_form import LoginForm, RegisterForm
 from app.login_database import LoginDatabase
@@ -101,7 +102,6 @@ def roles():
         else:
             category = 'rank'
             sort_order = 'ASC'
-
         flash('{}'.format(form.role_filter.data))
     return render_template('roles.html', title='Roles', form=form,
                            data=RolesDatabase().view_sorted_roles(category, sort_order), download=download)
@@ -139,6 +139,8 @@ def vacancies():
     return render_template('vacancies.html', title='Vacancies', form=form, data=data)
 
 
-@flask_app.route('/download')
+@flask_app.route('/download', methods=['GET'])
 def download_csv():
-    return send_file('outputs/download.csv', mimetype='text/csv', as_attachment=True)
+    file_name = 'roles_download.csv'
+    RolesDatabase().export_to_csv(f'app/outputs/{file_name}')
+    return send_file(f"outputs/{file_name}", mimetype='text/csv', as_attachment=True)
