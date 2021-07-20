@@ -1,13 +1,14 @@
 import os
+import sqlite3
 
-from flask import render_template, flash, redirect, url_for, session, current_app
+from flask import render_template, flash, redirect, url_for, session, current_app, request
 from app import flask_app
 from app.login_form import LoginForm, RegisterForm
 from app.login_database import LoginDatabase
 from app.vacancies_database import VacanciesDatabase
 from app.vacancies_form import VacancyForm
 from app.roles_database import RolesDatabase
-from app.roles_form import RolesForm, RolesDownload
+from app.roles_form import RolesForm, RolesDownload, RoleSearch
 from flask import send_file
 
 
@@ -104,6 +105,19 @@ def roles():
         flash('{}'.format(form.role_filter.data))
     return render_template('roles.html', title='Roles', form=form,
                            data=RolesDatabase().view_sorted_roles(category, sort_order), download=download)
+
+
+@flask_app.route('/search/', methods=['GET', 'POST'])
+def search():
+    roles_db = sqlite3.connect('app/databases/roles.db', check_same_thread=False)
+    roles_db_cursor = roles_db.cursor()
+    search_form = RoleSearch(request.form)
+    if search_form.validate_on_submit():
+        constructed_query = "%" + search_form.search_term.data + "%"
+        roles_db_cursor.execute("SELECT * FROM roles WHERE job_role LIKE (?)", [constructed_query])
+        query_roles = roles_db_cursor.fetchall()
+        return render_template('search.html', title='Search', form=search_form, data=query_roles)
+    return render_template('search.html', title='Search', form=search_form, data=RolesDatabase().view_sorted_roles('job_role', 'ASC'))
 
 
 @flask_app.route('/vacancies/', methods=['GET', 'POST'])

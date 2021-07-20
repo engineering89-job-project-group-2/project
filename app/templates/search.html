@@ -1,0 +1,63 @@
+{% extends "base.html" %} <!-- header -->
+
+{% block content %}
+    <div class="content">
+        <div class="content-wrapper">
+        <div class="content-left">
+            <h1>Search</h1>
+            <p>Why not search our database?</p>
+            <br>
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                {{ form.search_term(size=32, class_="input", placeholder="Search") }}
+                {{ form.search_button(class_="button") }}
+            </form>
+            <br>
+            {% for msg in get_flashed_messages() %}
+                <div class="notif">
+                    <p>Added filter for <b>{{ msg }}</b></p>
+                </div>
+            {% endfor %}
+            <br>
+            <p>Go ahead and download the results</p>
+            <br>
+            <form action="" method="post" novalidate>
+                <a class="button button-margin" href="/download">Download .csv</a>
+            </form>
+            <br>
+        </div>
+
+        <div class="content-flask content-right">
+            <div id="content-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Rank (Last 6 Months)</th>
+                    <th>Rank Change (YoY)</th>
+                    <th>Median Salary</th>
+                    <th>Median Salary Change (YoY)</th>
+                    <th>Historical Job Ads</th>
+                    <th>Job Vacancies</th>
+                </tr>
+                </thead>
+                <tbody>
+                 {% for row in data %}
+                    <tr>
+                        <td>{{row[0]}}</td>
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td>{{"£{:,}".format(row[3])}}</td>
+                        <td>{{"{}%".format(row[4])}}</td>
+                        <td>{{"{:,}".format(row[5])}}</td>
+                        <td>{{"{:,}".format(row[6])}}</td>
+                    </tr>
+                 {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}
+
