@@ -108,22 +108,6 @@ def roles():
     return render_template('roles.html', title='Roles', form=filter_form, search=search_form, data=data)
 
 
-# @flask_app.route('/search/', methods=['GET', 'POST'])
-# def search():
-#     roles_db = sqlite3.connect('app/databases/roles.db', check_same_thread=False)
-#     roles_db_cursor = roles_db.cursor()
-#     search_form = RoleSearch(request.form)
-#     if search_form.validate_on_submit():
-#         constructed_query = "%" + search_form.search_term.data + "%"
-#         roles_db_cursor.execute("SELECT * FROM roles WHERE job_role LIKE (?)", [constructed_query])
-#         query_roles = roles_db_cursor.fetchall()
-#         return render_template('search.html', title='Search', form=search_form, data=query_roles)
-#
-#     if 'username' in session:
-#         data = RolesDatabase().view_sorted_roles('job_role', 'ASC', True)
-#     else:
-#         data = RolesDatabase().view_sorted_roles('job_role', 'ASC', False)
-#     return render_template('search.html', title='Search', form=search_form, data=data)
 
 
 @flask_app.route('/vacancies/', methods=['GET', 'POST'])
