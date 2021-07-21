@@ -10,6 +10,7 @@ from app.vacancies_form import VacancyForm
 from app.roles_database import RolesDatabase
 from app.roles_form import RolesForm, RolesDownload, RoleSearch
 from flask import send_file
+from app.login_form import RecruiterVacanciesForm
 
 
 @flask_app.route('/index')
@@ -144,3 +145,18 @@ def download_csv():
     file_name = 'roles_download.csv'
     RolesDatabase().export_to_csv(f'app/outputs/{file_name}')
     return send_file(f"outputs/{file_name}", mimetype='text/csv', as_attachment=True)
+
+
+
+@flask_app.route('/recruiter/', methods=['GET', 'POST'])
+def recruiter():
+    try:
+        if 'username'  not in session:
+            return redirect(url_for('index'))
+    except Exception as e:
+        print(e)
+
+    form = RecruiterVacanciesForm()
+
+    return render_template('recruiter.html', title='Add a Job Vacancy', form=form)
+
