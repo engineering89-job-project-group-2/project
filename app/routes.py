@@ -39,8 +39,6 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for('login'))
         session['username'] = form.username.data
-        if user[3] == 'admin':
-            session['admin'] = True
         return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
 
@@ -56,7 +54,7 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         db = LoginDatabase()
-        db.new_user(int(form.staff_id.data), str(form.username.data), str(form.password.data), str(form.role.data))
+        db.new_user(str(form.email.data), str(form.username.data), str(form.password.data))
         flash("User registration complete!")
     return render_template('register.html', title='Register a new user', form=form)
 
@@ -147,7 +145,7 @@ def vacancies():
     return render_template('vacancies.html', title='Vacancies', form=form, data=data)
 
 
-@flask_app.route('/download', methods=['GET'])
+@flask_app.route('/download/', methods=['GET'])
 def download_csv():
     file_name = 'roles_download.csv'
     RolesDatabase().export_to_csv(f'app/outputs/{file_name}')
