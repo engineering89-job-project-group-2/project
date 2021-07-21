@@ -18,8 +18,4 @@ class RolesForm(FlaskForm):
 
 class RoleSearch(FlaskForm):
     search_term = StringField(validators=[DataRequired()])
-    search_button = SubmitField("\U0001F50D")
-
-
-class RolesDownload(FlaskForm):
-    download = SubmitField('Download .csv')
+    search_button = SubmitField("Search")

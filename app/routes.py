@@ -8,7 +8,7 @@ from app.login_database import LoginDatabase
 from app.vacancies_database import VacanciesDatabase
 from app.vacancies_form import VacancyForm
 from app.roles_database import RolesDatabase
-from app.roles_form import RolesForm, RolesDownload, RoleSearch
+from app.roles_form import RolesForm, RoleSearch
 from flask import send_file
 
 
@@ -39,9 +39,6 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for('login'))
         session['username'] = form.username.data
-        # if user[3] == 'admin':
-        #     session['admin'] = True
-        flash('Logged in successfully')
         return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
 
@@ -71,53 +68,46 @@ def logout():
 
 @flask_app.route('/roles/', methods=['GET', 'POST'])
 def roles():
-    form = RolesForm()
-    download = RolesDownload()
+    search_form = RoleSearch(request.form)
+
+    filter_form = RolesForm()
     category = 'rank'
     sort_order = 'ASC'
-    # if download.validate_on_submit():
-    #     flash('Hello')
-    if form.validate_on_submit():
+    if filter_form.validate_on_submit():
         RolesDatabase().role_scrap_to_db()
         # python switch lol
         # need to figure out how to order; is bigger always better? ASC = ascending, DESC = descending
-        if form.role_filter.data == 'Alphabetical':
+        if filter_form.role_filter.data == 'Alphabetical':
             category = 'job_role'
             sort_order = 'ASC'
-        elif form.role_filter.data == 'Rank Change':
+        elif filter_form.role_filter.data == 'Rank Change':
             category = 'rank_change'
             sort_order = 'DESC'
-        elif form.role_filter.data == 'Median Salary':
+        elif filter_form.role_filter.data == 'Median Salary':
             category = 'median_salary'
             sort_order = 'DESC'
-        elif form.role_filter.data == 'Median Salary Change':
+        elif filter_form.role_filter.data == 'Median Salary Change':
             category = 'median_salary_change'
             sort_order = 'DESC'
-        elif form.role_filter.data == 'Historical Job Ads':
+        elif filter_form.role_filter.data == 'Historical Job Ads':
             category = 'historical'
             sort_order = 'DESC'
-        elif form.role_filter.data == 'Job Vacancies':
+        elif filter_form.role_filter.data == 'Job Vacancies':
             category = 'live_job_count'
             sort_order = 'DESC'
         else:
             category = 'rank'
             sort_order = 'ASC'
-        flash('{}'.format(form.role_filter.data))
-    return render_template('roles.html', title='Roles', form=form,
-                           data=RolesDatabase().view_sorted_roles(category, sort_order), download=download)
+        flash('{}'.format(filter_form.role_filter.data))
 
+    is_auth = True if 'username' in session else False
+    data = RolesDatabase().view_sorted_roles(category, sort_order, is_auth)
 
-@flask_app.route('/search/', methods=['GET', 'POST'])
-def search():
-    roles_db = sqlite3.connect('app/databases/roles.db', check_same_thread=False)
-    roles_db_cursor = roles_db.cursor()
-    search_form = RoleSearch(request.form)
     if search_form.validate_on_submit():
-        constructed_query = "%" + search_form.search_term.data + "%"
-        roles_db_cursor.execute("SELECT * FROM roles WHERE job_role LIKE (?)", [constructed_query])
-        query_roles = roles_db_cursor.fetchall()
-        return render_template('search.html', title='Search', form=search_form, data=query_roles)
-    return render_template('search.html', title='Search', form=search_form, data=RolesDatabase().view_sorted_roles('job_role', 'ASC'))
+        data = RolesDatabase().search_role(category, sort_order, is_auth, search_form.search_term.data)
+    return render_template('roles.html', title='Roles', form=filter_form, search=search_form, data=data)
+
+
 
 
 @flask_app.route('/vacancies/', methods=['GET', 'POST'])

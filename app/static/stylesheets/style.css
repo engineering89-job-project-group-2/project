@@ -295,11 +295,12 @@ h1 {
     margin-bottom: 50px;
 }
 #content-table {
+    margin-top: 20px;
     overflow-x: none;
-    padding: 10px 10px 20px 30px;
+    padding: 20px 10px 20px 30px;
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0px 5px 5px rgba(0,0,0,0.1)
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.05)
 }
 
 #img-coding {
@@ -309,7 +310,24 @@ h1 {
     max-height: 400px;
     margin: 0 auto;
 }
-
+.search {
+    width: calc(100% - 150px);
+}
+.capped {
+    z-index: 10;
+    width: 100%;
+    background-image: linear-gradient(rgba(255,255,255,0), white);
+    height: 100px;
+    margin-top: -100px;
+    position: relative;
+}
+.capped-text {
+    width: 100%;
+    text-align: center;
+    margin: 20px 0 5px 0;
+    color: #999;
+    font-size: 16px;
+}
 @media only screen and (max-width:1200px) {
 	.menu {
 		display: inline-block;
