@@ -167,7 +167,7 @@ i.miii {
 .menu {
 	line-height: 50px;
 	vertical-align: middle;
-	color: #fff;
+	color: #34495e;
 	font-weight: 500;
 	cursor: pointer;
 	display: inline-block;
@@ -177,7 +177,7 @@ i.miii {
 	display: inline-block;
 }
 .menu:hover {
-	color: #000;
+	color: #81B811;
 }
 
 
@@ -283,16 +283,26 @@ h1 {
     text-align: center;
     padding-bottom: 20px;
 }
-
+.content-left-unfix {
+    display: inline-block;
+    min-width: calc(100% - 820px - 20px);
+    width: 400px;
+    margin-right: 20px;
+}
 .content-left {
     display: inline-block;
     width: calc(100% - 820px - 20px);
     margin-right: 20px;
+    width: 450px;
+    position: fixed;
 }
 .content-right {
     display: inline-block;
     float: right;
     margin-bottom: 50px;
+}
+.content-login {
+    width: 500px;
 }
 #content-table {
     margin-top: 20px;
@@ -326,7 +336,7 @@ h1 {
     text-align: center;
     margin: 20px 0 5px 0;
     color: #999;
-    font-size: 16px;
+    font-size: 14px;
 }
 .vac_card {
     margin-bottom: 30px;
@@ -360,7 +370,7 @@ h1 {
 	margin: 0 10px 2px 0;
 	vertical-align: middle;
 }
-@media only screen and (max-width:1200px) {
+@media only screen and (max-width:1300px) {
 	.menu {
 		display: inline-block;
 	}
@@ -371,25 +381,22 @@ h1 {
 	}
 	.m-nav-b ul li {
 	    display: inline-block;
-		width: calc((100% - 90px) / 2);
+		width: calc((100% - 8px) / 2);
 		text-align: left;
 		margin-top: 0px;
 		line-height: 40px;
-		padding: 0 20px 0 20px;
 		border: none;
-		border: 1px solid rgba(255, 255, 255, 0.13);
 		margin-bottom: 6px;
 		margin-right: 8px;
+	}
+	.m-nav-b ul :not(.right) li a {
+		border: 2px solid rgba(0,0,0,0.05);
 	}
 	.m-nav-b ul li:nth-child(even) {
 		margin-right: 0;
 	}
 	.m-nav-b ul li:after {
 		display: none;
-	}
-	.m-nav-b ul li:hover {
-		border: none;
-		border: 1px solid rgba(255, 255, 255, 0);
 	}
 	.qwerty {
 		clear: both;
@@ -410,21 +417,29 @@ h1 {
 		float: none;
 		background-color: rgba(255, 255, 255, 0);
 	}
-	.content-left {
-	    width: 100%;
-	    display:block
-	    background-color:red;
-	    margin: 0 auto;
-	}
+    .content-left {
+        display: inline-block;
+        width: calc(100% - 20px);
+        padding: 10px;
+        position: relative;
+    }
 	.content-right {
         display: block;
 		float: none;
 		max-width: 100%;
 	}
+	.m-nav-title {
+	    margin-left: 25px;
+	}
+	.content-left-unfix {
+    display: inline-block;
+    width: 100%;
+    margin-right: 20px;
+}
 
 }
 
-@media only screen and (max-width:1200px) {
+@media only screen and (max-width:800px) {
     #content-table {
         overflow-x: scroll;
     }
