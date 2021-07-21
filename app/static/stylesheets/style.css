@@ -328,6 +328,38 @@ h1 {
     color: #999;
     font-size: 16px;
 }
+.vac_card {
+    margin-bottom: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.05);
+    transition: 0.1s;
+    border: 2px solid #fff;
+}
+.vac_card:hover {
+    cursor: pointer;
+    border: 2px solid #81B811;
+}
+.vac-wrap {
+    padding: 20px 30px;
+}
+.vac-wrap p {
+    margin: 5px 0;
+}
+.vac-wrap h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+.vac-item {
+    margin: 0;
+    margin-left: 2px;
+    display: block;
+}
+.m2-icon {
+    color: red;
+	margin: 0 10px 2px 0;
+	vertical-align: middle;
+}
 @media only screen and (max-width:1200px) {
 	.menu {
 		display: inline-block;

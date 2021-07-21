@@ -1,62 +1,117 @@
+import os
 import sqlite3
+import csv
+import requests
+import lxml.html as lh
+import pandas as pd
 
 
 class VacanciesDatabase:
     vacancy_db = sqlite3.connect('app/databases/vacancies.db', check_same_thread=False)
     vacancy_db_cursor = vacancy_db.cursor()
 
-    def add_vacancy(self, job_role, job_name, company, location, salary, job_type, deadline):
-        job_role = job_role.replace(" ", "_").lower()   # Need to remove/replace all whitespaces for table name
-        self.vacancy_db_cursor.execute("""CREATE TABLE IF NOT EXISTS {} ( 
-            job_name text,
-            company text, 
-            location text, 
-            salary INTEGER, 
-            job_type text,
-            deadline text
-        )""".format(job_role))
-        self.vacancy_db_cursor.execute('INSERT INTO {} VALUES (?, ?, ?, ?, ?, ?)'.format(job_role),
-                                       (job_name, company, location, salary, job_type, deadline))
+    def vacancy_database_initialise(self):
+        self.vacancy_db.execute("""CREATE TABLE IF NOT EXISTS vacancies (
+            job_name TEXT,
+            location TEXT,
+            company TEXT,
+            job_details TEXT,
+            salary TEXT,
+            time_posted TEXT
+        )""")
+
+    def del_all_vacancies(self):
+        self.vacancy_db_cursor.execute("DELETE FROM vacancies")
         self.vacancy_db.commit()
 
-    def view_sorted_vacancies(self, job_role):
-        job_role = job_role.replace(" ", "_").lower()   # Need to remove/replace all whitespaces for table name
-        self.vacancy_db_cursor.execute("SELECT * FROM {}".format(job_role))
-        all_jobs = self.vacancy_db_cursor.fetchall()
-        # need to return list in list so view_all_vacancies doesn't need unpacking
-        return [all_jobs]
+    def add_vacancy(self, job_name, location, company, job_details, salary, time_posted):
+        self.vacancy_db_cursor.execute("INSERT INTO vacancies VALUES (?, ?, ?, ?, ?, ?)",
+                                       (job_name, location, company, job_details, salary, time_posted))
+        self.vacancy_db.commit()
 
-    def view_all_vacancies(self):
-        self.vacancy_db_cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-        tables = self.vacancy_db_cursor.fetchall()
-        all_jobs = []
-        for table_name in tables:
-            table_name = table_name[0]
-            self.vacancy_db_cursor.execute("SELECT * FROM {}".format(table_name))
-            all_jobs.append(self.vacancy_db_cursor.fetchall())
-        return all_jobs
+    def remove_vacancy(self, job_name):
+        self.vacancy_db_cursor.execute("DELETE FROM vacancies WHERE job_name='{}'".format(job_name))
+        self.vacancy_db.commit()
 
+    # def del_all_vacancies(self):
+    #     self.vacancy_db_cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    #     tables = self.vacancy_db_cursor.fetchall()
+    #     for table_name in tables:
+    #         table_name = table_name[0]
+    #         self.vacancy_db_cursor.execute("DROP TABLE IF EXISTS {}".format(table_name))
+    #         self.vacancy_db.commit()
+    #
+    # def view_sorted_vacancies(self, job_role):
+    #     job_role = job_role.replace(" ", "_").lower()  # Need to remove/replace all whitespaces for table name
+    #     self.vacancy_db_cursor.execute("SELECT * FROM {}".format(job_role))
+    #     all_jobs = self.vacancy_db_cursor.fetchall()
+    #     # need to return list in list so view_all_vacancies doesn't need unpacking
+    #     return [all_jobs]
+    #
+    # def view_all_vacancies(self):
+    #     self.vacancy_db_cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    #     tables = self.vacancy_db_cursor.fetchall()
+    #     all_jobs = []
+    #     for table_name in tables:
+    #         table_name = table_name[0]
+    #         self.vacancy_db_cursor.execute("SELECT * FROM {}".format(table_name))
+    #         all_jobs.append(self.vacancy_db_cursor.fetchall())
+    #     return all_jobs
 
+    def vacancies_scrap_to_db(self):
+        try:
+            request = requests.get("https://www.itjobswatch.co.uk/IT-Jobs")
+            doc = lh.document_fromstring(request.content)
+            vacancies = doc.find_class('job')  # getting all job data entries from site
+            vacancy_list = []
+            for i in range(len(vacancies)):
+                vac = str(vacancies[i].text_content())  # extracting text content from html files
+                vac = os.linesep.join([s for s in vac.splitlines() if s.strip()])  # removing blank lines
+                vac = vac[36:]  # blank space at the beginning of each entry
+                vac = vac.split("\n                                    ")  # separator from scraped table entries
+                vacancy_list.append(vac)
+
+            for item in vacancy_list:
+                item.insert(1, item[1].split(' - ')[0])  # these 3 lines split the location-company string into 2 separate
+                item.insert(2, item[2].split(' - ')[1])  # may be a simpler way but this works for now
+                item.pop(3)
+                if len(item) == 5:
+                    item.insert(4, "None")  # adding a None salary if not listed
+
+            data_df = pd.DataFrame(vacancy_list, columns=["job_name", "location", "company", "job_details",
+                                                          "salary", "time_posted"])
+
+            pd.set_option("display.max_rows", None, "display.max_columns", None)
+
+            self.del_all_vacancies()
+
+            for i in data_df.index:
+                self.add_vacancy(data_df['job_name'][i],
+                                 data_df['location'][i],
+                                 data_df['company'][i],
+                                 data_df['salary'][i],
+                                 data_df['time_posted'][i],
+                                 data_df['job_details'][i]
+                                 )
+        except Exception as e:
+            print(e)
+
+    def view_vacancies(self):
+        self.vacancy_db_cursor.execute("SELECT * FROM vacancies")
+        all_vacancies = self.vacancy_db_cursor.fetchmany(20)
+        return all_vacancies
+
+    def search_vacancy(self, data):
+        constructed_query = "%" + data + "%"
+        self.vacancy_db_cursor.execute("SELECT * FROM vacancies WHERE job_name LIKE (?)", [constructed_query])
+        query_roles = self.vacancy_db_cursor.fetchmany(5)
+        return query_roles
 """
 
 The following is temp code for development purposes.
 
-# Add to the database manually
-VacanciesDatabase().add_vacancy('Agile Software Development', 'Name of Job 1', 'Gravitas Recruitment Group Ltd', 'Portsmouth, Hampshire',
-                                30_000, 'Permanent', '01-09-21')
+VacanciesDatabase().vacancies_scrap_to_db()
 
-VacanciesDatabase().add_vacancy('Developer', 'Name of Job 2', 'Rise Technical Recruitment Ltd', 'Cardiff',
-                                50_000, 'Permanent', 'N/A')
-                                
 
-VacanciesDatabase().view_all_vacancies()
-
-print(VacanciesDatabase().view_sorted_vacancies('Agile Software Development'))
 """
-# VacanciesDatabase().add_vacancy('Agile Software Development', 'Name of Job 1', 'Gravitas Recruitment Group Ltd',
-#                                 'Portsmouth, Hampshire',
-#                                 30_000, 'Permanent', '01-09-21')
-#
-# VacanciesDatabase().add_vacancy('Developer', 'Name of Job 2', 'Rise Technical Recruitment Ltd', 'Cardiff',
-#                                 50_000, 'Permanent', 'N/A')
-
+VacanciesDatabase().vacancy_database_initialise()
