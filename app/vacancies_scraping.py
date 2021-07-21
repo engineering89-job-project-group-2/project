@@ -1,6 +1,7 @@
 import os
 import sqlite3
 import csv
+import pandas as pd
 import requests
 from lxml import html
 
@@ -16,15 +17,17 @@ for i in range(len(vacancies)):
     vac = vac[36:]  # blank space at the beginning of each entry
     vac = vac.split("\n                                    ")  # separator from scraped table entries
     vacancy_list.append(vac)
-print(vacancy_list)
-# title_list = []
-# job_title = htmlElem.find_class('jobTitle')
-# for i in range(len(job_title)):
-#     title = str(job_title[i].text_content())
-#     title = os.linesep.join([s for s in title.splitlines() if s.strip()])  # removing blank lines from string
-#     title = title[36:]  # 36 blanks spaces at start of each line
-#     title_list.append(title)
-# print(title_list)
-# location_company = htmlElem.find_class('jobDetails jobDetailsTop')
-# job_description = htmlElem.find_class('jobDescription')
-# salary_posted = htmlElem.find_class('jobDetails')
+# print(vacancy_list)
+for item in vacancy_list:
+    item.insert(1, item[1].split(' - ')[0])  # these 3 lines split the location-company string into 2 separate
+    item.insert(2, item[2].split(' - ')[1])  # may be a simpler way but this works for now
+    item.pop(3)
+    if len(item) == 5:
+        item.insert(4, "None")  # adding a None salary if not listed
+
+# print(vacancy_list)
+data_df = pd.DataFrame(vacancy_list, columns=["Job Title", "Location", "Company", "Job Details",
+                                              "Salary(if available)", "Time Posted"])
+print(data_df)
+
+# create SQL database: Job Title, Location/Company, Job Description, Salary if there

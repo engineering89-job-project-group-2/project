@@ -13,7 +13,6 @@ class DataBaseClass:
 
     def add_role(self, job_role, rank, rank_change, median_salary, median_salary_change, historical,
                  live_job_count):
-        self.connection = sqlite3.connect('test_database')
         self.cursor = self.connection.cursor()
         self.cursor.execute("DELETE FROM roles")
         self.connection.execute("""CREATE TABLE IF NOT EXISTS roles (
