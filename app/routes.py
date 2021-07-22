@@ -148,13 +148,12 @@ def recruiter():
 
     form = RecruiterVacanciesForm()
 
-    if form.validate_on_sumbit():
+    if form.validate_on_submit():
         VacanciesDatabase().recruiter_add_vacancy(form.job_name.data,
-                                                  form.company.data,
                                                   form.location.data,
-                                                  form.salary.data,
-                                                  form.job_type.data,
-                                                  form.deadline.data
+                                                  form.company.data,
+                                                  form.job_details.data,
+                                                  form.salary.data
                                                   )
 
     return render_template('recruiter.html', title='Add a Job Vacancy', form=form)

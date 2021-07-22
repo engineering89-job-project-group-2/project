@@ -22,9 +22,8 @@ class RegisterForm(FlaskForm):
 
 class RecruiterVacanciesForm(FlaskForm):
     job_name = StringField(validators=[DataRequired(), Length(min=1, max=30)])
-    company = StringField(validators=[DataRequired()])
     location = StringField(validators=[DataRequired()])
+    company = StringField(validators=[DataRequired()])
     salary = StringField(validators=[DataRequired()])
-    job_type = StringField(validators=[DataRequired()])
-    deadline = StringField(validators=[DataRequired()])
+    job_details = StringField(validators=[DataRequired()])
     submit = SubmitField()
