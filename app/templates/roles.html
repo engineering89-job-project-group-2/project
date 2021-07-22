@@ -9,7 +9,6 @@
             <br>
             <form action="" method="post" novalidate>
                 {{ form.hidden_tag() }}
-            <p>Filter:</p>
                 {{ form.role_filter(class_="input input-dropdown") }}
                 {{ form.sort(class_="button") }}
             </form>
@@ -20,7 +19,16 @@
                 </div>
             {% endfor %}
             <br>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p>Why not search our database?</p>
+            <br>
+            <form action="" method="post" novalidate>
+                {{ search.hidden_tag() }}
+                {{ search.search_term(size=32, class_="input search", placeholder="Search") }}
+                {{ search.search_button(class_="button") }}
+            </form>
+            <br>
+            <br>
+            <p>Go ahead and download a csv file of all the roles.</p>
             <br>
             <form action="" method="post" novalidate>
                 <a class="button button-margin" href="/download">Download .csv</a>
@@ -56,6 +64,13 @@
                  {% endfor %}
                 </tbody>
             </table>
+
+                {% if not session['username'] %}
+                    <div class="capped"></div>
+                    <br>
+                    <div class="capped-text"><span class="material-icons m_icon">lock</span></div>
+                    <div class="capped-text">Unlock all roles by <a href="/login">logging in</a></div>
+                {% endif %}
             </div>
         </div>
         </div>

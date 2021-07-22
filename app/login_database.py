@@ -16,16 +16,20 @@ class LoginDatabase:
 
     def database_initialise(self):
         self.users_db_cursor.execute("""CREATE TABLE IF NOT EXISTS users (
-            staff_id integer,
+            email text,
             username text,
-            password text,
-            role text
+            password text
         )""")
         return "Completed"
 
-    def new_user(self, staff_id, username, password, role):
+    def new_user(self, email, username, password):
+        self.users_db_cursor.execute("""CREATE TABLE IF NOT EXISTS users (
+                    email text,
+                    username text,
+                    password text
+                )""")
         password_encrypted = pbkdf2_sha256.hash(password)
-        self.users_db_cursor.execute("INSERT INTO users VALUES (?, ?, ?, ?)", (staff_id, username, password_encrypted, role))
+        self.users_db_cursor.execute("INSERT INTO users VALUES (?, ?, ?)", (email, username, password_encrypted))
         self.users_db.commit()
         return True
 

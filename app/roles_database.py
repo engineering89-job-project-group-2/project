@@ -2,8 +2,6 @@ import sqlite3
 import csv
 import requests
 import lxml.html as lh
-from flask import send_file
-import io
 
 
 class RolesDatabase:
@@ -68,9 +66,12 @@ class RolesDatabase:
     #     all_roles = self.roles_db_cursor.fetchall()
     #     return all_roles
 
-    def view_sorted_roles(self, category, sort_order):
+    def view_sorted_roles(self, category, sort_order, is_auth):
         self.roles_db_cursor.execute("SELECT * FROM roles ORDER BY {} {}".format(category, sort_order))
-        all_roles = self.roles_db_cursor.fetchall()
+        if is_auth:
+            all_roles = self.roles_db_cursor.fetchall()
+        else:
+            all_roles = self.roles_db_cursor.fetchmany(5)
         return all_roles
 
     def export_to_csv(self, file_path):
@@ -99,8 +100,18 @@ class RolesDatabase:
         # output.seek(0)
         # --------------------------------------------------------------------------------------------------
 
-
+    def search_role(self, category, sort_order, is_auth, data):
+        constructed_query = "%" + data + "%"
+        self.roles_db_cursor.execute("SELECT * FROM roles WHERE job_role LIKE (?) ORDER BY {} {}".format(category, sort_order), [constructed_query])
+        if is_auth:
+            query_roles = self.roles_db_cursor.fetchall()
+        else:
+            query_roles = self.roles_db_cursor.fetchmany(5)
+        return query_roles
 """
+        constructed_query = "%" + search_form.search_term.data + "%"
+        roles_db_cursor.execute("SELECT * FROM roles WHERE job_role LIKE (?)", [constructed_query])
+        data = roles_db_cursor.fetchall()
 
 The following is temp code for development purposes.
 
