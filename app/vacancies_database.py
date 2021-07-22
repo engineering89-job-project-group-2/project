@@ -11,14 +11,16 @@ class VacanciesDatabase:
     vacancy_db_cursor = vacancy_db.cursor()
 
     def vacancy_database_initialise(self):
-        self.vacancy_db.execute("""CREATE TABLE IF NOT EXISTS vacancies (
-            job_name TEXT,
-            location TEXT,
-            company TEXT,
-            job_details TEXT,
-            salary TEXT,
-            time_posted TEXT
-        )""")
+        for i in ['vacancies', 'rec_vacancies']:
+            self.vacancy_db.execute("""CREATE TABLE IF NOT EXISTS {} (
+                job_name TEXT,
+                location TEXT,
+                company TEXT,
+                job_details TEXT,
+                salary TEXT,
+                time_posted TEXT
+            )""".format(i))
+            self.vacancy_db.commit()
 
     def del_all_vacancies(self):
         self.vacancy_db_cursor.execute("DELETE FROM vacancies")
@@ -72,7 +74,8 @@ class VacanciesDatabase:
                 vacancy_list.append(vac)
 
             for item in vacancy_list:
-                item.insert(1, item[1].split(' - ')[0])  # these 3 lines split the location-company string into 2 separate
+                item.insert(1,
+                            item[1].split(' - ')[0])  # these 3 lines split the location-company string into 2 separate
                 item.insert(2, item[2].split(' - ')[1])  # may be a simpler way but this works for now
                 item.pop(3)
                 if len(item) == 5:
@@ -97,15 +100,31 @@ class VacanciesDatabase:
             print(e)
 
     def view_vacancies(self):
-        self.vacancy_db_cursor.execute("SELECT * FROM vacancies")
-        all_vacancies = self.vacancy_db_cursor.fetchmany(20)
+        all_vacancies = []
+        for i in ['vacancies','rec_vacancies']:
+            self.vacancy_db_cursor.execute("SELECT * FROM {}".format(i))
+            all_vacancies += self.vacancy_db_cursor.fetchmany(20)
         return all_vacancies
 
     def search_vacancy(self, data):
         constructed_query = "%" + data + "%"
         self.vacancy_db_cursor.execute("SELECT * FROM vacancies WHERE job_name LIKE (?)", [constructed_query])
         query_roles = self.vacancy_db_cursor.fetchmany(5)
+        self.vacancy_db_cursor.execute("SELECT * FROM rec_vacancies WHERE job_name LIKE (?)", [constructed_query])
+        query_roles += self.vacancy_db_cursor.fetchmany(5)
         return query_roles
+
+
+    def recruiter_add_vacancy(self, job_name, location, company, job_details, salary, time_posted):
+        self.vacancy_db_cursor.execute("INSERT INTO rec_vacancies VALUES (?, ?, ?, ?, ?, ?)",
+                                       (job_name, location, company, job_details, salary, time_posted))
+        self.vacancy_db.commit()
+
+    def recruiter_remove_vacancy(self, job_name):
+        self.vacancy_db_cursor.execute("DELETE FROM rec_vacancies WHERE job_name='{}'".format(job_name))
+        self.vacancy_db.commit()
+
+
 """
 
 The following is temp code for development purposes.
@@ -115,3 +134,5 @@ VacanciesDatabase().vacancies_scrap_to_db()
 
 """
 VacanciesDatabase().vacancy_database_initialise()
+# VacanciesDatabase().recruiter_add_vacancy('dev', 'brum', 'sparta', 'blah', 'Salary: £0', 'Posted: Now')
+# VacanciesDatabase().recruiter_remove_vacancy('dev')
