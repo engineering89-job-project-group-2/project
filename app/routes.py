@@ -142,8 +142,8 @@ def download_csv():
 @flask_app.route('/recruiter/', methods=['GET', 'POST'])
 def recruiter():
     try:
-        if 'username'  not in session:
-            return redirect(url_for('index'))
+        if 'username' not in session:
+            return redirect(url_for('login'))
     except Exception as e:
         print(e)
 

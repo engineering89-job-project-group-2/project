@@ -66,13 +66,13 @@
                             <li class="target"><a href="/roles" title="Roles"><span class="material-icons m_icon">group</span>Roles</a></li>
                             {% if session['username'] %}
                             <li class="target"><a href="/vacancies"><span class="material-icons m_icon">work</span>Vacancies</a></li>
+                            <li class="target"><a href="/recruiter"><span class="material-icons m_icon">post_add</span>Recruiter</a></li>
                             {% endif %}
                         </div>
                         <div class="qwerty right">
                             {% if not session['username'] %}
                             <li class="target"><a href="/login"><span class="material-icons m_icon">login</span>Login</a></li>
                             <li class="target"><a href="/register"><span class="material-icons m_icon">person_add</span>Register</a></li>
-                            <li class="target"><a href="/recruiter"><span class="material-icons m_icon">work</span>Recruiter</a></li>
                             {% endif %}
                             {% if session['username'] %}
                             <li class="target"><a href="/logout"><span class="material-icons m_icon">logout</span>Logout</a></li>
