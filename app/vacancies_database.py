@@ -4,7 +4,7 @@ import csv
 import requests
 import lxml.html as lh
 import pandas as pd
-
+import datetime
 
 class VacanciesDatabase:
     vacancy_db = sqlite3.connect('app/databases/vacancies.db', check_same_thread=False)
@@ -92,9 +92,9 @@ class VacanciesDatabase:
                 self.add_vacancy(data_df['job_name'][i],
                                  data_df['location'][i],
                                  data_df['company'][i],
+                                 data_df['job_details'][i],
                                  data_df['salary'][i],
-                                 data_df['time_posted'][i],
-                                 data_df['job_details'][i]
+                                 data_df['time_posted'][i]
                                  )
         except Exception as e:
             print(e)
@@ -115,9 +115,11 @@ class VacanciesDatabase:
         return query_roles
 
 
-    def recruiter_add_vacancy(self, job_name, location, company, job_details, salary, time_posted):
+    def recruiter_add_vacancy(self, job_name, location, company, job_details, salary):
+        now = datetime.datetime.now()
+        posted = now.strftime("%d %B %Y")
         self.vacancy_db_cursor.execute("INSERT INTO rec_vacancies VALUES (?, ?, ?, ?, ?, ?)",
-                                       (job_name, location, company, job_details, salary, time_posted))
+                                       (job_name, location, company, job_details, salary, posted))
         self.vacancy_db.commit()
 
     def recruiter_remove_vacancy(self, job_name):

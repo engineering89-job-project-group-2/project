@@ -11,11 +11,10 @@
                 {{ form.hidden_tag() }}
                 <p>
                     {{ form.job_name(size=32,class_="input", placeholder="Job Title") }}
-                    {{ form.company(size=32,class_="input", placeholder="Company") }}
                     {{ form.location(size=32,class_="input", placeholder="Location") }}
+                    {{ form.company(size=32,class_="input", placeholder="Company") }}
                     {{ form.salary(size=32,class_="input", placeholder="Annual Salary") }}
-                    {{ form.job_type(size=32,class_="input", placeholder="Job Field") }}
-                    {{ form.deadline(size=32,class_="input", placeholder="Application Deadline") }}
+                    {{ form.job_details(size=32,class_="input", placeholder="Job Field") }}
                 </p>
                 <br>
                 <p>{{ form.submit(class_="button") }}</p>
