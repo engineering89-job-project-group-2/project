@@ -10,6 +10,7 @@ from app.vacancies_form import VacancySearch
 from app.roles_database import RolesDatabase
 from app.roles_form import RolesForm, RoleSearch
 from flask import send_file
+from app.login_form import RecruiterVacanciesForm
 
 
 @flask_app.route('/index')
@@ -135,9 +136,6 @@ def download_csv():
     file_name = 'roles_download.csv'
     RolesDatabase().export_to_csv(f'app/outputs/{file_name}')
     return send_file(f"outputs/{file_name}", mimetype='text/csv', as_attachment=True)
-<<<<<<< Updated upstream
-=======
-
 
 
 @flask_app.route('/recruiter/', methods=['GET', 'POST'])
@@ -160,5 +158,3 @@ def recruiter():
                                                   )
 
     return render_template('recruiter.html', title='Add a Job Vacancy', form=form)
-
->>>>>>> Stashed changes
