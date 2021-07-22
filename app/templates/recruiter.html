@@ -1,0 +1,31 @@
+{% extends "base.html" %} <!-- header -->
+
+
+{% block content %}
+    <div class="content">
+        <div class="content-wrapper">
+            <div class="content-flask">
+            <h1>Recruiter Job Upload </h1>
+                <br>
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.job_name(size=32,class_="input", placeholder="Job Title") }}
+                    {{ form.company(size=32,class_="input", placeholder="Company") }}
+                    {{ form.location(size=32,class_="input", placeholder="Location") }}
+                    {{ form.salary(size=32,class_="input", placeholder="Annual Salary") }}
+                    {{ form.job_type(size=32,class_="input", placeholder="Job Field") }}
+                    {{ form.deadline(size=32,class_="input", placeholder="Application Deadline") }}
+                </p>
+                <br>
+                <p>{{ form.submit(class_="button") }}</p>
+            </form>
+            <body>
+              {% for msg in get_flashed_messages() %}
+              <h2>{{ msg }}</h2>
+              {% endfor %}
+            </body>
+            </div>
+        </div>
+    </div>
+{% endblock %}
