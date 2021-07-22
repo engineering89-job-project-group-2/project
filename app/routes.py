@@ -138,7 +138,6 @@ def download_csv():
     return send_file(f"outputs/{file_name}", mimetype='text/csv', as_attachment=True)
 
 
-
 @flask_app.route('/recruiter/', methods=['GET', 'POST'])
 def recruiter():
     try:
@@ -149,5 +148,13 @@ def recruiter():
 
     form = RecruiterVacanciesForm()
 
-    return render_template('recruiter.html', title='Add a Job Vacancy', form=form)
+    if form.validate_on_sumbit():
+        VacanciesDatabase().recruiter_add_vacancy(form.job_name.data,
+                                                  form.company.data,
+                                                  form.location.data,
+                                                  form.salary.data,
+                                                  form.job_type.data,
+                                                  form.deadline.data
+                                                  )
 
+    return render_template('recruiter.html', title='Add a Job Vacancy', form=form)
