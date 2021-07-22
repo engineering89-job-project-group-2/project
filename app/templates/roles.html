@@ -53,7 +53,7 @@
                 <tbody>
                  {% for row in data %}
                     <tr>
-                        <td>{{row[0]}}</td>
+                        <td><a href="{{ url_for('render_role', role=row[0].replace(' ','_')) }}">{{row[0]}}</a></td>
                         <td>{{row[1]}}</td>
                         <td>{{row[2]}}</td>
                         <td>{{"£{:,}".format(row[3])}}</td>
