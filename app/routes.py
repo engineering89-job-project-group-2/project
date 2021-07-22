@@ -6,7 +6,7 @@ from app import flask_app
 from app.login_form import LoginForm, RegisterForm
 from app.login_database import LoginDatabase
 from app.vacancies_database import VacanciesDatabase
-from app.vacancies_form import VacancyForm
+from app.vacancies_form import VacancySearch
 from app.roles_database import RolesDatabase
 from app.roles_form import RolesForm, RoleSearch
 from flask import send_file
@@ -119,14 +119,15 @@ def vacancies():
     except Exception as e:
         print(e)
 
-    form = VacancyForm()
-    data = VacanciesDatabase().view_all_vacancies()
-    if form.validate_on_submit():
-        if form.job_filter.data != 'All':
-            flash('Added filter for {}'.format(form.job_filter.data))
-            data = VacanciesDatabase().view_sorted_vacancies(form.job_filter.data)
+    VacanciesDatabase().vacancies_scrap_to_db()
 
-    return render_template('vacancies.html', title='Vacancies', form=form, data=data)
+    search_form = VacancySearch()
+    data = VacanciesDatabase().view_vacancies()
+
+    if search_form.validate_on_submit():
+        data = VacanciesDatabase().search_vacancy(search_form.search_term.data)
+
+    return render_template('vacancies.html', title='Vacancies', search=search_form, data=data)
 
 
 @flask_app.route('/download/', methods=['GET'])

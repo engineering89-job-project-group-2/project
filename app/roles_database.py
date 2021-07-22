@@ -2,8 +2,6 @@ import sqlite3
 import csv
 import requests
 import lxml.html as lh
-from flask import send_file
-import io
 
 
 class RolesDatabase:
