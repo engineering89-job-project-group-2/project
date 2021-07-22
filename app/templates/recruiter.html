@@ -20,11 +20,9 @@
                 <br>
                 <p>{{ form.submit(class_="button") }}</p>
             </form>
-            <body>
               {% for msg in get_flashed_messages() %}
               <h2>{{ msg }}</h2>
               {% endfor %}
-            </body>
             </div>
         </div>
     </div>
