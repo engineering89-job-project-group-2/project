@@ -157,3 +157,8 @@ def recruiter():
                                                   )
 
     return render_template('recruiter.html', title='Add a Job Vacancy', form=form)
+
+
+@flask_app.route("/roles/<role>", methods=['GET'])
+def render_role(role):
+    return render_template("view.html", role=role)

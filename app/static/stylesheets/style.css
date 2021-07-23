@@ -219,7 +219,7 @@ h1 {
     margin 0 10px ;
 }
 .button:hover {
-    background-color: red;
+    background-color: pink;
 }
 .button:visited, .button:link {
     color: #fff;
@@ -231,6 +231,9 @@ h1 {
     border-radius: 3px;
     margin-bottom: 10px;
 }
+
+
+
 .content {
     margin-top: 30px;
     width: 100%;
@@ -243,30 +246,42 @@ h1 {
 }
 .content-flask {
 	max-width: 800px;
-	width: calc(100% - 20px);
+	width: 100%;
 	margin: 0 auto;
 }
 .content-flask table {
     border-collapse:collapse;
     border-spacing:0;
-    width:100%;
-    display:table;
     border-radius: 5px;
     overflow:hidden;
 }
-.content-flask table td, .content-flask table thead th {
-    padding: 5px;
-}
 .content-flask table thead {
     margin: 0;
-    background: rgba(255,255,255,.6);
+    background-color: #FFED00;
     text-align: left;
 }
+
 .content-flask table tr {
-    background-color: #fff;
+    border-bottom: 1px solid #eee;
 }
-.content-flask table tr:nth-child(2) {
-    background-color: #fff;
+.content-flask table th{
+    padding: 10px 20px;
+}
+.content-flask table td {
+    padding: 10px 20px;
+}
+.content-flask table tbody tr:hover {
+    background-color:#efefef;
+    cursor:pointer;
+}
+
+#content-table {
+    margin-top: 20px;
+    overflow-x: none;
+    border-radius: 8px;
+    box-shadow: -2px 0px 20px rgba(0,0,0,.07);
+    background-color: white;
+    padding-bottom: 20px;
 }
 
 .footer {
@@ -300,19 +315,11 @@ h1 {
     display: inline-block;
     float: right;
     margin-bottom: 50px;
+    padding-bottom: 20px;
 }
 .content-login {
     width: 500px;
 }
-#content-table {
-    margin-top: 20px;
-    overflow-x: none;
-    padding: 20px 10px 20px 30px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0px 3px 10px rgba(0,0,0,0.05)
-}
-
 #img-coding {
     display: block;
     max-width: 400px;
@@ -334,7 +341,7 @@ h1 {
 .capped-text {
     width: 100%;
     text-align: center;
-    margin: 20px 0 5px 0;
+    margin: 10px 0 5px 0;
     color: #999;
     font-size: 14px;
 }
@@ -370,7 +377,7 @@ h1 {
 	margin: 0 10px 2px 0;
 	vertical-align: middle;
 }
-@media only screen and (max-width:1300px) {
+@media only screen and (max-width:1350px) {
 	.menu {
 		display: inline-block;
 	}
