@@ -59,7 +59,7 @@ class RolesDatabase:
                               int(items[6].text_content().replace(',', '')))  # Job Vacancies
         except Exception as e:
             print(e)
-
+    
     # # Redundant code as view_sorted_roles > view_role
     # def view_role(self):
     #     self.roles_db_cursor.execute("SELECT * FROM roles")
@@ -73,6 +73,12 @@ class RolesDatabase:
         else:
             all_roles = self.roles_db_cursor.fetchmany(5)
         return all_roles
+
+    def view_selected_role(self, job_role):
+        self.roles_db_cursor.execute("SELECT * FROM roles WHERE job_role='{}'".format(job_role))
+        data = self.roles_db_cursor.fetchone()
+        return [data]
+
 
     def export_to_csv(self, file_path):
         # Need to add error handling +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -139,3 +145,4 @@ RolesDatabase().role_scrap_to_db()
 """
 
 RolesDatabase().role_database_initialise()
+

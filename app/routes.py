@@ -5,13 +5,13 @@ from flask import render_template, flash, redirect, url_for, session, current_ap
 from app import flask_app
 from app.login_form import LoginForm, RegisterForm
 from app.login_database import LoginDatabase
+from app.role_scrap import RolesScrap
 from app.vacancies_database import VacanciesDatabase
 from app.vacancies_form import VacancySearch
 from app.roles_database import RolesDatabase
 from app.roles_form import RolesForm, RoleSearch
 from flask import send_file
 from app.login_form import RecruiterVacanciesForm
-
 
 @flask_app.route('/index')
 @flask_app.route('/')
@@ -161,4 +161,8 @@ def recruiter():
 
 @flask_app.route("/roles/<role>", methods=['GET'])
 def render_role(role):
-    return render_template("view.html", role=role)
+    data = RolesDatabase().view_selected_role(role.replace('_', ' '))
+    scrap = RolesScrap().scrap(role)
+    return render_template("view.html", role=role, data=data, scrap=scrap)
+
+
