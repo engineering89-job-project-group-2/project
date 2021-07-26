@@ -163,6 +163,16 @@ def recruiter():
 def render_role(role):
     data = RolesDatabase().view_selected_role(role.replace('_', ' '))
     scrap = RolesScrap().scrap(role)
-    return render_template("view.html", role=role, data=data, scrap=scrap)
+    cdata = RolesDatabase().view_sorted_roles('job_role', 'ASC', True)
+    labels = [row[0] for row in cdata]
+    values = [row[5] for row in cdata]
+    colour = []
+    for row in cdata:
+        if row[0] == role.replace('_', ' '):
+            colour.append("#81B811")
+        else:
+            colour.append("#bbb")
+
+    return render_template("view.html", role=role, data=data, scrap=scrap, labels=labels, values=values, colour=colour)
 
 

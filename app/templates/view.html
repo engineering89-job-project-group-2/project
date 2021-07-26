@@ -16,7 +16,23 @@
                 </ul>
                 {% endfor %}
 
-
+                <canvas id="barChart"></canvas>
+                <script>
+                    var ctx = document.getElementById("barChart").getContext("2d");
+                    var barChart = new Chart(ctx, {
+                        type: "bar",
+                        data: {
+                            labels: {{ labels | safe }},
+                            datasets: [
+                                {
+                                    label: "Median Salary",
+                                    data: {{ values | safe }},
+                                    backgroundColor: {{ colour | safe }}
+                                }
+                            ]
+                        }
+                    });
+                </script>
                 <table>
                 <thead>
                 <tr>
