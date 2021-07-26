@@ -3,8 +3,57 @@
 {% block content %}
     <div class="content">
         <div class="content-wrapper">
-            <div class="content-role">
-              <h1>{{ role.replace('_',' ') }}</h1>
+            <h4>{{ role.replace('_',' ') }}</h4>
+            <hr id="header-line">
+            <div class="content-view">    
+
+                {% for i in data %}
+                <ul class="flex-container">
+                    <li class="flex-item" id="flex-rank">Rank (Last 6 Months)<p># {{ i[1] }}</p></li>
+                    <li class="flex-item">Median Salary<p>{{"£{:,}".format(i[3])}}</p></li>
+                    <li class="flex-item">Historical Job Ads<p>{{"{:,}".format(i[5])}}</p></li>
+                    <li class="flex-item">Job Vacancies<p>{{"{:,}".format(i[6])}}</p></li>
+                </ul>
+                {% endfor %}
+
+                <canvas id="barChart"></canvas>
+                <script>
+                    var ctx = document.getElementById("barChart").getContext("2d");
+                    var barChart = new Chart(ctx, {
+                        type: "bar",
+                        data: {
+                            labels: {{ labels | safe }},
+                            datasets: [
+                                {
+                                    label: "Median Salary",
+                                    data: {{ values | safe }},
+                                    backgroundColor: {{ colour | safe }}
+                                }
+                            ]
+                        }
+                    });
+                </script>
+                <table>
+                <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>6 Months to Now</th>
+                    <th>Same Period 2020</th>
+                    <th>Same Period 2019</th>
+                </tr>
+                </thead>
+                <tbody>
+                 {% for row in scrap %}
+                    <tr>
+                        <td>{{row[0]}}</td>
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td>{{row[3]}}</td>
+                    </tr>
+                 {% endfor %}
+                </tbody>
+            </table>
+
             </div>
         </div>
     </div>
