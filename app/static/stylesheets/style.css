@@ -433,6 +433,7 @@ hr#header-line {
     border: 1px solid #ccc;
     border-radius: 8px;
     margin-bottom: 40px;
+	margin-top: 40px;
 }
 .content-view table th {
 
