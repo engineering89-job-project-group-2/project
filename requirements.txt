@@ -1,0 +1,7 @@
+Flask
+flask_wtf
+WTForms
+passlib
+requests
+lxml
+pandas

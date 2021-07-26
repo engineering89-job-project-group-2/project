@@ -13,6 +13,7 @@ from app.roles_form import RolesForm, RoleSearch
 from flask import send_file
 from app.login_form import RecruiterVacanciesForm
 
+
 @flask_app.route('/index')
 @flask_app.route('/')
 def index():
@@ -109,8 +110,6 @@ def roles():
     return render_template('roles.html', title='Roles', form=filter_form, search=search_form, data=data)
 
 
-
-
 @flask_app.route('/vacancies/', methods=['GET', 'POST'])
 def vacancies():
     # If not logged in, return user to index
@@ -164,5 +163,4 @@ def render_role(role):
     data = RolesDatabase().view_selected_role(role.replace('_', ' '))
     scrap = RolesScrap().scrap(role)
     return render_template("view.html", role=role, data=data, scrap=scrap)
-
 
